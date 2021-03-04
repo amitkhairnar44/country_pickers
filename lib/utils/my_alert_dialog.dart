@@ -10,25 +10,22 @@ class MyAlertDialog<T> extends StatelessWidget {
   /// null, which implies a default that depends on the values of the other
   /// properties. See the documentation of [titlePadding] for details.
   const MyAlertDialog({
-    Key key,
+    Key? key,
     this.title,
     this.titlePadding,
     this.content,
     this.contentPadding = const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
     this.actions,
     this.semanticLabel,
-    this.divider = const Divider(
-      height: 0.0,
-    ),
+    this.divider = const Divider(height: 0.0),
     this.isDividerEnabled = true,
-  })  : assert(contentPadding != null),
-        super(key: key);
+  }) : super(key: key);
 
   /// The (optional) title of the dialog is displayed in a large font at the top
   /// of the dialog.
   ///
   /// Typically a [Text] widget.
-  final Widget title;
+  final Widget? title;
 
   /// Padding around the title.
   ///
@@ -40,7 +37,7 @@ class MyAlertDialog<T> extends StatelessWidget {
   /// provided (but see [contentPadding]). If it _is_ null, then an extra 20
   /// pixels of bottom padding is added to separate the [title] from the
   /// [actions].
-  final EdgeInsetsGeometry titlePadding;
+  final EdgeInsetsGeometry? titlePadding;
 
   /// The (optional) content of the dialog is displayed in the center of the
   /// dialog in a lighter font.
@@ -48,7 +45,7 @@ class MyAlertDialog<T> extends StatelessWidget {
   /// Typically, this is a [ListView] containing the contents of the dialog.
   /// Using a [ListView] ensures that the contents can scroll if they are too
   /// big to fit on the display.
-  final Widget content;
+  final Widget? content;
 
   /// Padding around the content.
   ///
@@ -61,7 +58,7 @@ class MyAlertDialog<T> extends StatelessWidget {
   /// The (optional) set of actions that are displayed at the bottom of the
   /// dialog.
   ///
-  /// Typically this is a list of [FlatButton] widgets.
+  /// Typically this is a list of [TextButton] widgets.
   ///
   /// These widgets will be wrapped in a [ButtonBar], which introduces 8 pixels
   /// of padding on each side.
@@ -69,7 +66,7 @@ class MyAlertDialog<T> extends StatelessWidget {
   /// If the [title] is not null but the [content] _is_ null, then an extra 20
   /// pixels of padding is added above the [ButtonBar] to separate the [title]
   /// from the [actions].
-  final List<Widget> actions;
+  final List<Widget>? actions;
 
   /// The semantic label of the dialog used by accessibility frameworks to
   /// announce screen transitions when the dialog is opened and closed.
@@ -82,7 +79,7 @@ class MyAlertDialog<T> extends StatelessWidget {
   ///
   ///  * [SemanticsConfiguration.isRouteName], for a description of how this
   ///    value is used.
-  final String semanticLabel;
+  final String? semanticLabel;
 
   /// The (optional) horizontal separator used between title, content and
   /// actions.
@@ -97,16 +94,16 @@ class MyAlertDialog<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> children = <Widget>[];
-    String label = semanticLabel;
+    String? label = semanticLabel;
 
     if (title != null) {
-      children.add(new Padding(
+      children.add(Padding(
         padding: titlePadding ??
-            new EdgeInsets.fromLTRB(
+            EdgeInsets.fromLTRB(
                 24.0, 24.0, 24.0, isDividerEnabled ? 20.0 : 0.0),
-        child: new DefaultTextStyle(
-          style: Theme.of(context).textTheme.title,
-          child: new Semantics(child: title, namesRoute: true),
+        child: DefaultTextStyle(
+          style: Theme.of(context).textTheme.headline6!,
+          child: Semantics(child: title, namesRoute: true),
         ),
       ));
       if (isDividerEnabled) children.add(divider);
@@ -115,20 +112,24 @@ class MyAlertDialog<T> extends StatelessWidget {
         case TargetPlatform.iOS:
           label = semanticLabel;
           break;
+        case TargetPlatform.linux:
+        case TargetPlatform.macOS:
+        case TargetPlatform.windows:
         case TargetPlatform.android:
         case TargetPlatform.fuchsia:
           label = semanticLabel ??
-              MaterialLocalizations.of(context)?.alertDialogLabel;
+              MaterialLocalizations.of(context).alertDialogLabel;
+          break;
       }
     }
 
     if (content != null) {
-      children.add(new Flexible(
-        child: new Padding(
+      children.add(Flexible(
+        child: Padding(
           padding: contentPadding,
-          child: new DefaultTextStyle(
-            style: Theme.of(context).textTheme.subhead,
-            child: content,
+          child: DefaultTextStyle(
+            style: Theme.of(context).textTheme.subtitle1!,
+            child: content!,
           ),
         ),
       ));
@@ -136,14 +137,10 @@ class MyAlertDialog<T> extends StatelessWidget {
 
     if (actions != null) {
       if (isDividerEnabled) children.add(divider);
-      children.add(new ButtonTheme.bar(
-        child: new ButtonBar(
-          children: actions,
-        ),
-      ));
+      children.add(ButtonBar(children: actions!));
     }
 
-    Widget dialogChild = new Column(
+    Widget dialogChild = Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: children,
@@ -151,8 +148,8 @@ class MyAlertDialog<T> extends StatelessWidget {
 
     if (label != null)
       dialogChild =
-          new Semantics(namesRoute: true, label: label, child: dialogChild);
+          Semantics(namesRoute: true, label: label, child: dialogChild);
 
-    return new Dialog(child: dialogChild);
+    return Dialog(child: dialogChild);
   }
 }

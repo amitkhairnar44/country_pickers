@@ -1,3 +1,9 @@
+## [2.0.0]
+
+* Stable null safety release.
+* Fix issue[#59](https://github.com/figengungor/country_pickers/issues/59)
+* Fix issue[#58](https://github.com/figengungor/country_pickers/issues/58)
+
 ## [1.3.0] - 05/26/2020
 
 * Fix issue [#10](https://github.com/figengungor/country_pickers/issues/10) Thanks @ened

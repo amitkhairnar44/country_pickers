@@ -341,17 +341,19 @@ class _HomePageState extends State<DemoPage> {
   void _openFilteredCountryPickerDialog() => showDialog(
         context: context,
         builder: (context) => Theme(
-            data: Theme.of(context).copyWith(primaryColor: Colors.pink),
-            child: CountryPickerDialog(
-                titlePadding: EdgeInsets.all(8.0),
-                searchCursorColor: Colors.pinkAccent,
-                searchInputDecoration: InputDecoration(hintText: 'Search...'),
-                isSearchable: true,
-                title: Text('Select your phone code'),
-                onValuePicked: (Country country) =>
-                    setState(() => _selectedFilteredDialogCountry = country),
-                itemFilter: (c) => ['AR', 'DE', 'GB', 'CN'].contains(c.isoCode),
-                itemBuilder: _buildDialogItem)),
+          data: Theme.of(context).copyWith(primaryColor: Colors.pink),
+          child: CountryPickerDialog(
+            titlePadding: EdgeInsets.all(8.0),
+            searchCursorColor: Colors.pinkAccent,
+            searchInputDecoration: InputDecoration(hintText: 'Search...'),
+            isSearchable: true,
+            title: Text('Select your phone code'),
+            onValuePicked: (Country country) =>
+                setState(() => _selectedFilteredDialogCountry = country),
+            itemFilter: (c) => ['AR', 'DE', 'GB', 'CN'].contains(c.isoCode),
+            itemBuilder: _buildDialogItem,
+          ),
+        ),
       );
 
   void _openCupertinoCountryPicker() => showCupertinoModalPopup<void>(
